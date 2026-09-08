@@ -12,6 +12,22 @@ jobs:
    test:
        runs-on: ubuntu-latest
        steps:
-          - name: hello world
-            run: echo "hello world"
+          - name: checkout main branch
+            uses: actions/checkout@v6
+          
+          - name: install python
+            uses: actions/setup-python@v5
+            with: 
+                python-version: '3.11'
+
+          - name: install dependancies
+            run:
+              python -m pip install -U pip wheel
+              pip install -e ".[dev]"
+          - name: Quick CLI smoke test
+            run: units-convert --help || (echo "CLI is missing" && exist 1)
+
+          - name: Run tests
+            run:
+              pytest
           
